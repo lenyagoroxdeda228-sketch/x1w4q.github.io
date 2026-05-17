@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>x1w4q</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Unbounded:wght@700;900&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --fg: #e8e6ff;
+      --accent: #7c5cfc;
+      --accent2: #00d4ff;
+      --muted: #3a3852;
+      --card-bg: rgba(255,255,255,0.03);
+      --card-border: rgba(255,255,255,0.07);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Space Mono', monospace;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom cursor */
+    .cursor {
+      width: 10px; height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      position: fixed;
+      top: 0; left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.1s ease, background 0.2s;
+      mix-blend-mode: difference;
+    }
+    .cursor-ring {
+      width: 36px; height: 36px;
+      border: 1.5px solid var(--accent2);
+      border-radius: 50%;
+      position: fixed;
+      top: 0; left: 0;
+      pointer-events: none;
+      z-index: 9998;
+      transition: transform 0.18s ease, width 0.2s, height 0.2s;
+      mix-blend-mode: difference;
+    }
+
+    /* Noise overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.5;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Animated grid background */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: -50%;
+      background-image:
+        linear-gradient(rgba(124,92,252,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124,92,252,0.08) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridMove 20s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes gridMove {
+      0%   { transform: translateY(0) translateX(0); }
+      100% { transform: translateY(60px) translateX(60px); }
+    }
+
+    /* Glow blobs */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      animation: blobFloat 8s ease-in-out infinite;
+    }
+    .blob-1 {
+      width: 360px; height: 360px;
+      background: radial-gradient(circle, rgba(124,92,252,0.25), transparent 70%);
+      top: 10%; left: -10%;
+      animation-delay: 0s;
+    }
+    .blob-2 {
+      width: 280px; height: 280px;
+      background: radial-gradient(circle, rgba(0,212,255,0.18), transparent 70%);
+      bottom: 15%; right: -8%;
+      animation-delay: -3s;
+    }
+    .blob-3 {
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(255,80,180,0.12), transparent 70%);
+      top: 55%; left: 55%;
+      animation-delay: -5s;
+    }
+    @keyframes blobFloat {
+      0%,100% { transform: translateY(0) scale(1); }
+      50%      { transform: translateY(-30px) scale(1.06); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+
+    .nickname {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: clamp(4rem, 14vw, 10rem);
+      line-height: 1;
+      letter-spacing: -0.04em;
+      background: linear-gradient(135deg, #fff 0%, #c2b8ff 40%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: fadeSlideUp 1s cubic-bezier(.16,1,.3,1) both;
+      position: relative;
+    }
+
+    /* Glitch effect on hover */
+    .nickname:hover {
+      animation: glitch 0.4s steps(2) infinite;
+    }
+    @keyframes glitch {
+      0%   { text-shadow: 2px 0 #7c5cfc, -2px 0 #00d4ff; }
+      25%  { text-shadow: -3px 0 #7c5cfc, 3px 0 #00d4ff; clip-path: inset(20% 0 30% 0); }
+      50%  { text-shadow: 3px 0 #ff50b4, -3px 0 #7c5cfc; }
+      75%  { text-shadow: -2px 0 #00d4ff, 2px 0 #ff50b4; clip-path: inset(60% 0 10% 0); }
+      100% { text-shadow: 2px 0 #7c5cfc, -2px 0 #00d4ff; }
+    }
+
+    .tagline {
+      margin-top: 1.2rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      opacity: 0;
+      animation: fadeSlideUp 1s 0.3s cubic-bezier(.16,1,.3,1) forwards;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      animation: fadeIn 1.5s 1s ease forwards;
+      opacity: 0;
+      z-index: 2;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 50px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      animation: scrollPulse 1.5s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%,100% { opacity: 0.4; transform: scaleY(1); }
+      50%      { opacity: 1; transform: scaleY(1.2); }
+    }
+
+    /* ─── SOCIALS SECTION ─── */
+    .socials {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6rem 1.5rem;
+      gap: 1.2rem;
+      position: relative;
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    /* Social cards */
+    .card {
+      width: 100%;
+      max-width: 460px;
+      padding: 1.4rem 1.8rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      text-decoration: none;
+      color: var(--fg);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s cubic-bezier(.16,1,.3,1), border-color 0.3s, box-shadow 0.3s;
+      backdrop-filter: blur(12px);
+
+      /* reveal animation state */
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    .card.visible {
+      animation: revealCard 0.7s cubic-bezier(.16,1,.3,1) forwards;
+    }
+    @keyframes revealCard {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--card-hover-bg, transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+      border-radius: inherit;
+    }
+    .card:hover::before { opacity: 1; }
+    .card:hover {
+      transform: translateY(-4px) scale(1.015);
+      border-color: var(--card-accent, var(--accent));
+      box-shadow: 0 0 40px -10px var(--card-glow, var(--accent));
+    }
+
+    /* Shimmer on hover */
+    .card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+      transition: left 0.5s ease;
+      pointer-events: none;
+    }
+    .card:hover::after { left: 140%; }
+
+    /* TikTok */
+    .card.tiktok {
+      --card-accent: #69c9d0;
+      --card-glow: rgba(105,201,208,0.3);
+      --card-hover-bg: linear-gradient(135deg, rgba(105,201,208,0.04), rgba(238,29,82,0.04));
+    }
+    /* Telegram personal */
+    .card.telegram {
+      --card-accent: #2aabee;
+      --card-glow: rgba(42,171,238,0.3);
+      --card-hover-bg: linear-gradient(135deg, rgba(42,171,238,0.05), transparent);
+    }
+    /* Telegram channel */
+    .card.tg-channel {
+      --card-accent: #a855f7;
+      --card-glow: rgba(168,85,247,0.3);
+      --card-hover-bg: linear-gradient(135deg, rgba(168,85,247,0.05), transparent);
+    }
+
+    .card-icon {
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .card-icon svg { width: 26px; height: 26px; }
+
+    .card.tiktok   .card-icon { background: linear-gradient(135deg, #010101, #161616); box-shadow: 2px 2px 0 #69c9d0, -2px -2px 0 #ee1d52; }
+    .card.telegram .card-icon { background: linear-gradient(135deg, #2aabee, #229ed9); box-shadow: 0 4px 20px rgba(42,171,238,0.35); }
+    .card.tg-channel .card-icon { background: linear-gradient(135deg, #7c3aed, #a855f7); box-shadow: 0 4px 20px rgba(168,85,247,0.35); }
+
+    .card-text { position: relative; z-index: 1; }
+    .card-title {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .card-sub {
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+      letter-spacing: 0.05em;
+    }
+
+    .card-arrow {
+      margin-left: auto;
+      position: relative;
+      z-index: 1;
+      opacity: 0.3;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .card:hover .card-arrow { opacity: 1; transform: translateX(4px); }
+
+    /* ─── FOOTER ─── */
+    .footer {
+      text-align: center;
+      padding: 3rem 1rem;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ─── UTILS ─── */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- ─── HERO ─── -->
+  <section class="hero">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <div class="hero-content">
+      <h1 class="nickname">x1w4q</h1>
+      <p class="tagline">мои соцсети ↓</p>
+    </div>
+
+    <div class="scroll-hint">
+      <span>scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ─── SOCIALS ─── -->
+  <section class="socials">
+    <p class="section-label">/ links</p>
+
+    <!-- TikTok -->
+    <a class="card tiktok" href="https://www.tiktok.com/@x1w4q" target="_blank" data-delay="0">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.85a8.2 8.2 0 004.79 1.52V6.93a4.85 4.85 0 01-1.02-.24z" fill="white"/>
+        </svg>
+      </div>
+      <div class="card-text">
+        <div class="card-title">TikTok</div>
+        <div class="card-sub">@x1w4q</div>
+      </div>
+      <div class="card-arrow">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </a>
+
+    <!-- Telegram -->
+    <a class="card telegram" href="https://t.me/x1w4q" target="_blank" data-delay="150">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+          <path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 12 12 12 0 0011.944 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+        </svg>
+      </div>
+      <div class="card-text">
+        <div class="card-title">Telegram</div>
+        <div class="card-sub">@x1w4q · личные сообщения</div>
+      </div>
+      <div class="card-arrow">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </a>
+
+    <!-- Telegram Channel -->
+    <a class="card tg-channel" href="https://t.me/WhyChannelHere" target="_blank" data-delay="300">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
+        </svg>
+      </div>
+      <div class="card-text">
+        <div class="card-title">Telegram канал</div>
+        <div class="card-sub">посты и обновления</div>
+      </div>
+      <div class="card-arrow">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </a>
+  </section>
+
+  <footer class="footer">© x1w4q · all rights reserved</footer>
+
+  <script>
+    // ── Cursor
+    const cursor = document.getElementById('cursor');
+    const ring   = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    function animCursor() {
+      cursor.style.transform = `translate(${mx - 5}px, ${my - 5}px)`;
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.transform = `translate(${rx - 18}px, ${ry - 18}px)`;
+      requestAnimationFrame(animCursor);
+    }
+    animCursor();
+
+    document.querySelectorAll('a').forEach(el => {
+      el.addEventListener('mouseenter', () => { ring.style.width='56px'; ring.style.height='56px'; ring.style.borderColor='var(--accent2)'; });
+      el.addEventListener('mouseleave', () => { ring.style.width='36px'; ring.style.height='36px'; ring.style.borderColor='var(--accent2)'; });
+    });
+
+    // ── Scroll reveal for cards
+    const cards = document.querySelectorAll('.card');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const delay = entry.target.dataset.delay || 0;
+          setTimeout(() => entry.target.classList.add('visible'), parseInt(delay));
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    cards.forEach(c => obs.observe(c));
+  </script>
+</body>
+</html>
