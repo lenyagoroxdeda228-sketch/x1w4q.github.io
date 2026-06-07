@@ -697,44 +697,51 @@ function seekAudio(e){
 // ── vibe ──
 function vibe(ms){ if('vibrate' in navigator) navigator.vibrate(ms); }
 
-// ── progress canvas ──
+// ── MD3 Linear Progress Indicator ──
 (function(){
   const pc=document.getElementById('prog-canvas');
   const cx=pc.getContext('2d');
-  let amp=0, phase=0;
+  let waveAmp=0, wavePhase=0, waveCycle=0;
   function rs(){ pc.width=pc.offsetWidth*devicePixelRatio; pc.height=24*devicePixelRatio; }
   rs(); window.addEventListener('resize',rs);
   function drawBar(){
     const W=pc.width,H=pc.height,dpr=devicePixelRatio;
     const pct=audio.duration?(audio.currentTime/audio.duration):0;
-    const fillX=pct*W, mid=H/2, freq=6, steps=W;
-    const targetAmp=isPlaying?5*dpr:0;
-    amp+=(targetAmp-amp)*0.04;
-    if(isPlaying) phase+=0.018;
-    cx.clearRect(0,0,W,H);
-    cx.lineJoin='round';
-    // bg
-    cx.beginPath();
-    for(let i=0;i<=steps;i++){
-      const x=fillX+(i/steps)*(W-fillX), t=x/W, y=mid+Math.sin(t*Math.PI*2*freq+phase)*amp;
-      i===0?cx.moveTo(x,y):cx.lineTo(x,y);
+    const fillX=pct*W, mid=H/2;
+    const maxAmpPx=4.5*dpr, freq=4;
+    // Animate wave
+    if(isPlaying){
+      waveCycle+=0.012;
+      waveAmp=Math.max(0,Math.sin(waveCycle*Math.PI));
+      wavePhase-=0.035;
+    } else {
+      waveAmp*=0.88;
+      if(waveAmp<0.01) waveAmp=0;
     }
-    cx.strokeStyle='rgba(255,255,255,0.15)'; cx.lineWidth=2*dpr; cx.stroke();
-    // fill
+    const curAmpPx=waveAmp*maxAmpPx;
+    const [r,g,b]=hexToRgb(window._accentColor||'#fb923c');
+    cx.clearRect(0,0,W,H);
+    cx.lineJoin='round'; cx.lineCap='round';
+    // Track (inactive) — thin flat line
+    cx.beginPath(); cx.moveTo(fillX,mid); cx.lineTo(W,mid);
+    cx.strokeStyle=`rgba(${r},${g},${b},0.15)`; cx.lineWidth=3*dpr; cx.stroke();
+    // Active fill — wave
     if(fillX>0){
       cx.beginPath();
+      const steps=Math.ceil(fillX);
       for(let i=0;i<=steps;i++){
-        const x=(i/steps)*fillX, t=x/W, y=mid+Math.sin(t*Math.PI*2*freq+phase)*amp;
+        const x=(i/steps)*fillX;
+        const y=mid+Math.sin((x/W)*freq*Math.PI*2+wavePhase)*curAmpPx;
         i===0?cx.moveTo(x,y):cx.lineTo(x,y);
       }
-      const [r,g,b] = hexToRgb(window._accentColor||'#fb923c');
-      cx.strokeStyle=`rgba(${r},${g},${b},0.95)`;
-      cx.lineWidth=isPlaying?3.5*dpr:2*dpr; cx.stroke();
-      // glow
-      if(isPlaying && fillX>2){
-        const gy=mid+Math.sin((fillX/W)*Math.PI*2*freq+phase)*amp;
-        cx.beginPath(); cx.arc(fillX,gy,4*dpr,0,Math.PI*2);
-        cx.fillStyle=`rgba(${r},${g},${b},0.6)`; cx.shadowColor=`rgba(${r},${g},${b},0.5)`; cx.shadowBlur=8*dpr; cx.fill(); cx.shadowBlur=0;
+      cx.strokeStyle=`rgba(${r},${g},${b},1)`; cx.lineWidth=3*dpr; cx.stroke();
+      // Glow dot at playhead
+      if(isPlaying&&fillX>3*dpr){
+        const tipY=mid+Math.sin((fillX/W)*freq*Math.PI*2+wavePhase)*curAmpPx;
+        cx.beginPath(); cx.arc(fillX,tipY,4*dpr,0,Math.PI*2);
+        cx.fillStyle=`rgba(${r},${g},${b},0.7)`;
+        cx.shadowColor=`rgba(${r},${g},${b},0.6)`; cx.shadowBlur=10*dpr;
+        cx.fill(); cx.shadowBlur=0;
       }
     }
     requestAnimationFrame(drawBar);
