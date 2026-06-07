@@ -61,21 +61,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--surface);font-
 /* ── splash ── */
 #splash{position:fixed;inset:0;background:var(--surface);z-index:9999;display:flex;align-items:center;justify-content:center;opacity:1;transition:opacity .5s ease}
 #splash.hide{opacity:0!important;pointer-events:none}
-.loader-wrap{width:80px;height:80px;background:color-mix(in srgb,var(--primary) 12%,transparent);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;animation:loaderIn .5s .15s ease both}
+.loader-wrap{width:80px;height:80px;background:var(--surface-container);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,.4);border:1px solid var(--outline);opacity:0;animation:loaderIn .5s .15s ease both}
 @keyframes loaderIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
-.md3-loader{width:48px;height:48px;animation:md3spin 4.667s linear infinite}
-.md3-loader path{fill:var(--primary);animation:md3morph 4.667s ease-in-out infinite}
-@keyframes md3spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-@keyframes md3morph{
-  0%{d:path("M50 2 C55 16 57 18 68 10 C66 23 67 26 81 24 C72 33 72 36 84 43 C70 46 70 49 78 61 C64 57 62 60 65 74 C54 65 51 66 49 80 C44 67 41 66 32 76 C33 62 31 60 18 64 C27 53 26 50 12 51 C25 43 26 40 14 33 C28 32 30 30 24 17 C37 23 40 22 39 8 C45 19 48 19 50 2 Z")}
-  14%{d:path("M50 6 C68 6 71 4 82 18 C94 30 95 30 94 50 C94 70 95 70 82 82 C70 94 70 95 50 94 C30 95 30 94 18 82 C6 70 6 70 6 50 C6 30 6 30 18 18 C30 6 32 6 50 6 Z")}
-  28%{d:path("M50 7 C74 7 93 26 93 50 C93 74 74 93 50 93 C26 93 7 74 7 50 C7 26 26 7 50 7 Z")}
-  42%{d:path("M50 8 C58 8 62 2 70 8 C82 16 78 14 84 26 C92 34 98 32 92 44 C90 56 96 60 86 66 C80 78 84 84 70 86 C62 96 58 92 50 92 C42 92 38 96 30 86 C16 84 20 78 14 66 C4 60 10 56 8 44 C2 32 8 34 16 26 C22 14 18 16 30 8 C38 2 42 8 50 8 Z")}
-  57%{d:path("M50 10 C72 4 78 22 90 28 C98 42 80 52 90 70 C82 90 64 78 50 90 C36 78 18 90 10 70 C20 52 2 42 10 28 C22 22 28 4 50 10 Z")}
-  71%{d:path("M50 6 C66 6 80 14 88 30 C96 46 94 64 84 78 C74 92 58 96 44 92 C28 88 14 76 8 60 C2 44 8 26 22 14 C32 6 40 6 50 6 Z")}
-  85%{d:path("M50 8 C72 4 96 24 92 50 C96 76 72 96 50 92 C28 96 4 76 8 50 C4 24 28 4 50 8 Z")}
-  100%{d:path("M50 2 C55 16 57 18 68 10 C66 23 67 26 81 24 C72 33 72 36 84 43 C70 46 70 49 78 61 C64 57 62 60 65 74 C54 65 51 66 49 80 C44 67 41 66 32 76 C33 62 31 60 18 64 C27 53 26 50 12 51 C25 43 26 40 14 33 C28 32 30 30 24 17 C37 23 40 22 39 8 C45 19 48 19 50 2 Z")}
-}
+.morph{width:40px;height:40px;background:var(--primary);border-radius:50%;animation:morphShape 2.2s cubic-bezier(.2,0,0,1) infinite}
 
 /* ── main layout ── */
 #app{position:fixed;inset:0;display:flex;flex-direction:column;opacity:0;transition:opacity .5s ease}
@@ -129,8 +117,8 @@ h1{font-size:2.6rem;letter-spacing:-.5px;color:var(--on-surface);margin-bottom:8
 .track-title{font-size:13px;color:var(--on-surface);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .track-artist{font-size:11px;color:var(--on-surface-variant);font-weight:400;margin-top:1px}
 .track-time{font-size:11px;color:var(--on-surface-variant);flex-shrink:0;margin-left:8px;font-weight:400}
-.progress-wrap{height:12px;cursor:pointer;position:relative}
-#prog-canvas{display:block;width:100%;height:12px}
+.progress-wrap{height:20px;cursor:pointer;position:relative}
+#prog-canvas{display:block;width:100%;height:20px}
 
 
 
@@ -210,7 +198,7 @@ h1{font-size:2.6rem;letter-spacing:-.5px;color:var(--on-surface);margin-bottom:8
 
 <!-- splash -->
 <div id="splash">
-  <div class="loader-wrap"><svg class="md3-loader" viewBox="0 0 100 100"><path/></svg></div>
+  <div class="loader-wrap"><div class="morph"></div></div>
 </div>
 
 <!-- bg particles -->
@@ -375,7 +363,7 @@ h1{font-size:2.6rem;letter-spacing:-.5px;color:var(--on-surface);margin-bottom:8
         <div class="track-time" id="time">0:00 / 0:00</div>
       </div>
       <div class="progress-wrap" id="prog-wrap" onclick="seekAudio(event)">
-        <canvas id="prog-canvas" height="24"></canvas>
+        <canvas id="prog-canvas" height="40"></canvas>
       </div>
     </div>
   </div>
@@ -571,6 +559,20 @@ function hexToRgb(hex){
   requestAnimationFrame(draw);
 })();
 
+// ── random morph ──
+(function(){
+  const R=()=>Math.floor(Math.random()*46)+4;
+  const rBR=()=>`${R()}px ${R()}px ${R()}px ${R()}px`;
+  const steps=6;
+  let kf='@keyframes morphShape{';
+  for(let i=0;i<=steps;i++){
+    const pct=Math.round(i/steps*100);
+    kf+=`${pct}%{border-radius:${rBR()};transform:rotate(${Math.floor(Math.random()*90)-45}deg) scale(${(.85+Math.random()*.3).toFixed(2)})}`;
+  }
+  kf+='}';
+  const s=document.createElement('style'); s.textContent=kf; document.head.appendChild(s);
+})();
+
 // ── splash → show card ──
 setTimeout(()=>{
   const splash=document.getElementById('splash');
@@ -697,56 +699,83 @@ function seekAudio(e){
 // ── vibe ──
 function vibe(ms){ if('vibrate' in navigator) navigator.vibrate(ms); }
 
-// ── MD3 Linear Progress Indicator ──
+// ── MD3 Linear Progress Indicator (exact spec) ──
 (function(){
   const pc=document.getElementById('prog-canvas');
   const cx=pc.getContext('2d');
-  let waveAmp=0, wavePhase=0, waveCycle=0;
+  // amp: 0..1, breathes up and down with ease-in-out
+  let amp=0, ampTarget=0, ampT=0, ampDir=1;
+  // track resize
   function rs(){ pc.width=pc.offsetWidth*devicePixelRatio; pc.height=24*devicePixelRatio; }
   rs(); window.addEventListener('resize',rs);
-  function drawBar(){
-    const W=pc.width,H=pc.height,dpr=devicePixelRatio;
+
+  function easeInOut(t){ return t<0.5?2*t*t:1-Math.pow(-2*t+2,2)/2; }
+
+  function drawBar(ts){
+    const W=pc.width, H=pc.height, dpr=devicePixelRatio;
     const pct=audio.duration?(audio.currentTime/audio.duration):0;
     const fillX=pct*W, mid=H/2;
-    const maxAmpPx=4.5*dpr, freq=4;
-    // Animate wave
+
+    // MD3 spec: max amplitude ~5px physical, ~1.5 full sine cycles across track
+    const maxA=5*dpr;
+    // wavelength = track width / 1.5 cycles → freq = 1.5 cycles per track
+    const freq=1.5;
+
+    // Breathe animation: ease-in-out ramp 0→1→0, period ~2s @ 60fps
     if(isPlaying){
-      waveCycle+=0.012;
-      waveAmp=Math.max(0,Math.sin(waveCycle*Math.PI));
-      wavePhase-=0.035;
+      ampT+=0.008; // full 0..1 in ~125 frames ≈ 2.1s
+      if(ampT>=1){ ampT=0; } // loop continuously
+      // triangle wave 0→1→0
+      const phase=ampT<0.5?ampT*2:2-ampT*2;
+      amp=easeInOut(phase);
     } else {
-      waveAmp*=0.88;
-      if(waveAmp<0.01) waveAmp=0;
+      amp*=0.82; // fast decay to flat
+      if(amp<0.005) amp=0;
     }
-    const curAmpPx=waveAmp*maxAmpPx;
+
     const [r,g,b]=hexToRgb(window._accentColor||'#fb923c');
     cx.clearRect(0,0,W,H);
     cx.lineJoin='round'; cx.lineCap='round';
-    // Track (inactive) — thin flat line
-    cx.beginPath(); cx.moveTo(fillX,mid); cx.lineTo(W,mid);
-    cx.strokeStyle=`rgba(${r},${g},${b},0.15)`; cx.lineWidth=3*dpr; cx.stroke();
-    // Active fill — wave
-    if(fillX>0){
+
+    // ── Inactive track (right of playhead) — very thin, low opacity, flat ──
+    if(fillX<W-1){
       cx.beginPath();
-      const steps=Math.ceil(fillX);
+      cx.moveTo(fillX, mid);
+      cx.lineTo(W, mid);
+      cx.strokeStyle=`rgba(${r},${g},${b},0.14)`;
+      cx.lineWidth=2*dpr;
+      cx.stroke();
+      // end cap dot
+      cx.beginPath();
+      cx.arc(W, mid, 2*dpr, 0, Math.PI*2);
+      cx.fillStyle=`rgba(${r},${g},${b},0.14)`;
+      cx.fill();
+    }
+
+    // ── Active fill (left of playhead) — thick wave, fully opaque ──
+    if(fillX>1){
+      const steps=Math.max(2, Math.ceil(fillX/dpr)*2);
+      cx.beginPath();
       for(let i=0;i<=steps;i++){
         const x=(i/steps)*fillX;
-        const y=mid+Math.sin((x/W)*freq*Math.PI*2+wavePhase)*curAmpPx;
+        // sine: freq full cycles across entire track width, amplitude breathes
+        const t=(x/W)*freq*Math.PI*2;
+        const y=mid+Math.sin(t)*amp*maxA;
         i===0?cx.moveTo(x,y):cx.lineTo(x,y);
       }
-      cx.strokeStyle=`rgba(${r},${g},${b},1)`; cx.lineWidth=3*dpr; cx.stroke();
-      // Glow dot at playhead
-      if(isPlaying&&fillX>3*dpr){
-        const tipY=mid+Math.sin((fillX/W)*freq*Math.PI*2+wavePhase)*curAmpPx;
-        cx.beginPath(); cx.arc(fillX,tipY,4*dpr,0,Math.PI*2);
-        cx.fillStyle=`rgba(${r},${g},${b},0.7)`;
-        cx.shadowColor=`rgba(${r},${g},${b},0.6)`; cx.shadowBlur=10*dpr;
-        cx.fill(); cx.shadowBlur=0;
-      }
+      cx.strokeStyle=`rgba(${r},${g},${b},1)`;
+      cx.lineWidth=3*dpr;
+      cx.stroke();
+      // start cap dot
+      cx.beginPath();
+      cx.arc(0, mid, 2*dpr, 0, Math.PI*2);
+      cx.fillStyle=`rgba(${r},${g},${b},1)`;
+      cx.fill();
     }
+
     requestAnimationFrame(drawBar);
   }
-  drawBar();
+  requestAnimationFrame(drawBar);
 })();
 
 // ── ripple ──
